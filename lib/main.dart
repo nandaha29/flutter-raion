@@ -19,11 +19,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: HomePage(),
+      home: const HomePage(),
       theme: ThemeData(
         colorScheme: ColorScheme.fromSwatch().copyWith(
-          primary: Color.fromRGBO(27, 44, 42, 0.408),
-          secondary: Color.fromARGB(255, 13, 214, 214),
+          primary: const Color.fromRGBO(27, 44, 42, 0.408),
+          secondary: const Color.fromARGB(255, 13, 214, 214),
           // whtee: Color.fromARGB(255, 255, 255, 255),
         ),
       ),

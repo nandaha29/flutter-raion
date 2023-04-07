@@ -1,20 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:listpagedua/extension/time_format.dart';
 import 'package:listpagedua/util/my_button.dart';
 
 class DialogBox extends StatefulWidget {
   final TextEditingController taskController;
-  final TextEditingController timeController;
   final TextEditingController descController;
   final Function() onSave;
   final Function() onCancel;
+  final Function() onTimePicker;
+  final Function() onDatePicker;
+  final TimeOfDay timeOfDay;
+  final String date;
+  final bool isEdit;
+  final String? initTask;
+  final String? initDesc;
 
   const DialogBox({
     Key? key,
     required this.onSave,
     required this.onCancel,
     required this.taskController,
-    required this.timeController,
+    required this.onDatePicker,
     required this.descController,
+    required this.onTimePicker,
+    required this.timeOfDay,
+    required this.date,
+    this.isEdit = false,
+    this.initTask,
+    this.initDesc,
   }) : super(key: key);
 
   @override
@@ -22,70 +35,84 @@ class DialogBox extends StatefulWidget {
 }
 
 class _DialogBoxState extends State<DialogBox> {
-  // TimeOfDay timeOfDay = TimeOfDay.now();
-  TimeOfDay _timeOfDay = TimeOfDay(hour: 10, minute: 30);
-
-  //show time
-  void _showTimePicker() {
-    showTimePicker(context: context, initialTime: TimeOfDay.now())
-        .then((value) {
-      setState(() {
-        _timeOfDay = value!;
-      });
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('Add Task'),
-      // backgroundColor: Theme.of(context).colorScheme.secondary,
+      title: const Text('Add Task'),
       backgroundColor: Colors.white,
-      content: Container(
+      content: SizedBox(
         height: 300, //size
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            TextField(
+            TextFormField(
+              initialValue: widget.isEdit ? widget.initTask! : null,
               controller: widget.taskController,
-              decoration: InputDecoration(
-                  border: OutlineInputBorder(), hintText: "Add a new task"),
-            ),
-            TextField(
-              controller: widget.descController,
-              decoration: InputDecoration(
-                  border: OutlineInputBorder(), hintText: "Add a desc"),
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                hintText: "Add a new task",
+              ),
             ),
             TextFormField(
-              controller: widget.timeController,
+              initialValue: widget.isEdit ? widget.initDesc! : null,
+              controller: widget.descController,
               decoration: const InputDecoration(
-                  labelText: 'Time picker', border: OutlineInputBorder()),
+                border: OutlineInputBorder(),
+                hintText: "Add a desc",
+              ),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 //display choose time
                 Text(
-                  _timeOfDay.format(context).toString(),
-                  style: TextStyle(fontSize: 15),
+                  widget.timeOfDay.to24hours(),
+                  // widget.timeOfDay.format(context).toString(),
+                  style: const TextStyle(fontSize: 15),
                 ),
 
                 // button
                 TextButton.icon(
                   style: TextButton.styleFrom(
-                    textStyle: TextStyle(color: Colors.blue),
+                    textStyle: const TextStyle(color: Colors.blue),
                     backgroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(24.0),
                     ),
                   ),
-                  onPressed: _showTimePicker,
-                  icon: Icon(
+                  onPressed: widget.onTimePicker,
+                  icon: const Icon(
                     Icons.access_alarm,
                   ),
-                  label: Text(
+                  label: const Text(
                     'Pick Time',
                   ),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                //display choose time
+                Text(
+                  widget.date,
+                  style: const TextStyle(fontSize: 15),
+                ),
+
+                // button
+                TextButton.icon(
+                  style: TextButton.styleFrom(
+                    textStyle: const TextStyle(color: Colors.blue),
+                    backgroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(24.0),
+                    ),
+                  ),
+                  onPressed: widget.onDatePicker,
+                  icon: const Icon(
+                    Icons.calendar_month,
+                  ),
+                  label: const Text('Pick Date'),
                 ),
               ],
             ),
@@ -103,14 +130,3 @@ class _DialogBoxState extends State<DialogBox> {
     );
   }
 }
-
-//   Future displayTimePicker(BuildContext context) async {
-//     var time = await showTimePicker(context: context, initialTime: timeOfDay);
-
-//     if (time != null) {
-//       setState(() {
-//         widget.timeController.text = "${time.hour}:${time.minute}";
-//       });
-//     }
-//   }
-// }

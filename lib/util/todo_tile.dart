@@ -7,17 +7,19 @@ class ToDoTile extends StatelessWidget {
   final String descName;
 
   final bool taskCompleted;
-  Function(bool?)? onChanged;
-  Function(BuildContext)? deleteFunction;
+  final Function(bool?)? onChanged;
+  final Function(BuildContext)? deleteFunction;
+  final Function(BuildContext)? editFunction;
 
-  ToDoTile({
+  const ToDoTile({
     super.key,
     required this.taskName,
     required this.timeName,
     required this.descName,
     required this.taskCompleted,
-    required this.onChanged,
-    required this.deleteFunction,
+    this.onChanged,
+    this.deleteFunction,
+    this.editFunction,
   });
 
   // This widget is the root of your application.
@@ -27,7 +29,13 @@ class ToDoTile extends StatelessWidget {
       //ini satu
       padding: const EdgeInsets.only(left: 25.0, right: 25, top: 25),
       child: Slidable(
-        endActionPane: ActionPane(motion: StretchMotion(), children: [
+        endActionPane: ActionPane(motion: const StretchMotion(), children: [
+          // SlidableAction(
+          //   onPressed: editFunction,
+          //   icon: Icons.edit,
+          //   backgroundColor: Colors.green,
+          //   borderRadius: BorderRadius.circular(12),
+          // ),
           SlidableAction(
             onPressed: deleteFunction,
             icon: Icons.delete,
